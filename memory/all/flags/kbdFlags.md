@@ -1,0 +1,19 @@
+---
+title: kbdFlags
+geekdocHidden: true
+params:
+    address: $D00080 (ti.flags + $00)
+    name: kbdFlags
+---
+
+### Address: $D00080 (ti.flags + $00)
+
+Keyboard scan flags.
+
+### Size: 1 byte
+
+#### Bit 3 - kbdSCR:
+Set if a keypress has been scanned and is ready for [`GetCSC`](../../../syscalls/all/GetCSC.md) to return. This flag is then reset after [`GetCSC`](../../../syscalls/all/GetCSC.md) is called.
+
+#### Bit 4 - kbdKeyPress:
+Set if a key has been pressed.

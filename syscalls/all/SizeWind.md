@@ -1,0 +1,21 @@
+---
+title: SizeWind
+geekdocHidden: true
+params:
+    address: $020180
+    category: Context
+    name: SizeWind
+---
+
+### Address: $020180
+
+This routine calls the current context's [Window Size Change](../../memory/all/cxSizeWind.md) vector.
+
+### Inputs:
+* [`cxSizeWind`](../../memory/all/cxSizeWind.md): Context's current Window Size Change vector.
+
+### Outputs:
+* Calls the vector.
+
+### Destroys:
+* Depends on the vector.

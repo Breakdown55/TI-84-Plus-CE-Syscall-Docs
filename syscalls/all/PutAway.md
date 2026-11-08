@@ -1,0 +1,21 @@
+---
+title: PutAway
+geekdocHidden: true
+params:
+    address: $02017C
+    category: Context
+    name: PutAway
+---
+
+### Address: $02017C
+
+This routine calls the current context's [PutAway](../../memory/all/cxPutAway.md) vector.
+
+### Inputs:
+* [`cxPutAway`](../../memory/all/cxPutAway.md): Context's current PutAway vector.
+
+### Outputs:
+* Calls the vector.
+
+### Destroys:
+* Depends on the vector.
