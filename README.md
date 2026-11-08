@@ -5,6 +5,7 @@ This Markdown reference covers TI-OS syscalls for eZ80 assembly programs. Each e
 - [Syscall index](syscalls/README.md)
 - [Graphics entries](syscalls/README.md#graphics)
 - [Graphics test coverage and results](tests/README.md)
+- [Graphics OP1–OP6 read and write audit](tests/graphics-ops.md)
 
 The manual imports the syscall pages and linked reference material from the [eZ80 docs](https://github.com/EzCE/ez80-docs) checkout. The imported material retains its [AGPL-3.0 license](LICENSE). Links and Hugo shortcodes were adapted for standalone Markdown. A few source references have no matching page in the checkout and appear as plain text.
 

@@ -21,3 +21,4 @@ Draws the Texas Instruments logo and text, along with copyright info if specifie
 
 ### Destroys:
 * `af`, `bc`, `de`, `hl`, `ix`.
+* Writes `OP1` on the [tested path](../../tests/graphics-ops.md).

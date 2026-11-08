@@ -19,6 +19,8 @@ The suite ran **1,509 calls** on the TI-OS 5.8.2 ROM in the CEmu v2.0 core. That
 
 The wrapper tests compare full VRAM, `plotSScreen`, `saveSScreen`, relevant OS flags, and register results against calls to the underlying routine. Separate tests verify absolute pixel locations and output colors without calling a reference syscall. The 8-bit LCD cases exercise the ROM's byte-per-pixel path with a relocated framebuffer. Hook tests use short callbacks that preserve the coordinates. Results apply to the tested OS and configurations.
 
+The [graphics operand audit](graphics-ops.md) covers all 65 graphics entries. It watches OP1 through OP6 for reads and writes and checks the final contents separately. Its fixtures also cover coordinate bounds, palette and stack-based helpers, circle inputs, and sprite bitmap packing.
+
 ## Run again
 
 From the workspace root in PowerShell, with MinGW GCC and 64-bit Python available:
@@ -26,6 +28,7 @@ From the workspace root in PowerShell, with MinGW GCC and 64-bit Python availabl
 ```powershell
 ./manual/tests/build.ps1
 python manual/tests/graphics.py
+python manual/tests/graphics_op_audit.py
 ```
 
 The build uses the CEmu v2.0 source at `iline-tests/cemu-source` (commit `a0a9d35a498b40ce0561ac51215b283d4059e816`). The tests use the local `ipoint-tests/before-tests.ce` snapshot by default. Pass `--state` to select a compatible 5.8.2 snapshot. The ROM and snapshot are not part of the manual.

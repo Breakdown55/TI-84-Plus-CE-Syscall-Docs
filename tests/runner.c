@@ -5,11 +5,28 @@
 #include <string.h>
 
 #include "cpu.h"
+#include "debug/debug.h"
 #include "emu.h"
 #include "interrupt.h"
 #include "mem.h"
 
-enum { RAM_BASE = 0xD00000, ENTRY = 0xD1C000, STACK = 0xD23F00 };
+enum { RAM_BASE = 0xD00000, ENTRY = 0xD1C000, STACK = 0xD23F00,
+       OP_FIRST = 0xD005F8, OP_END = 0xD0063A };
+
+static uint8_t op_access[OP_END - OP_FIRST];
+
+void gui_debug_close(void) {}
+
+void gui_debug_open(int reason, uint32_t address) {
+    if (address >= OP_FIRST && address < OP_END) {
+        if (reason == DBG_WATCHPOINT_READ) op_access[address - OP_FIRST] |= DBG_MASK_READ;
+        if (reason == DBG_WATCHPOINT_WRITE) op_access[address - OP_FIRST] |= DBG_MASK_WRITE;
+    }
+}
+
+__declspec(dllexport) const uint8_t *get_op_access(void) {
+    return op_access;
+}
 
 void gui_console_clear(void) {}
 void gui_console_printf(const char *format, ...) { (void)format; }
@@ -28,7 +45,11 @@ asic_rev_t gui_handle_reset(const boot_ver_t *version, asic_rev_t loaded,
 }
 
 __declspec(dllexport) uint8_t *load_state(const char *image) {
+    debug_init();
     if (emu_load(EMU_DATA_IMAGE, image) != EMU_STATE_VALID || !emu_set_run_rate(1000)) return NULL;
+    for (uint32_t address = OP_FIRST; address < OP_END; ++address) {
+        debug_watch(address, DBG_MASK_RW, true);
+    }
     return mem.ram.block;
 }
 
@@ -55,8 +76,9 @@ __declspec(dllexport) uint32_t invoke(uint32_t address, uint32_t *regs, uint32_t
     intrpt[0].enabled = intrpt[1].enabled = 0;
     cpu.IEF1 = cpu.IEF2 = regs[10] != 0;
     cpu.IEF_wait = cpu.halted = false;
+    memset(op_access, 0, sizeof op_access);
     cpu_flush(ENTRY, true);
-    for (unsigned i = 0; i < 50 && !cpu.halted; ++i) emu_run(2);
+    for (unsigned i = 0; i < 750 && !cpu.halted; ++i) emu_run(2);
     if (!cpu.halted || cpu.registers.PC != ENTRY + sizeof code || cpu.registers.SPL != STACK ||
         cpu.registers.SPS != 0xAA32 || !cpu.ADL) return cpu.registers.PC | 0x1000000;
     regs[0] = cpu.registers.AF;
